@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/ztree/zTreeStyle.css}">
+    <style>
+        .tree li {
+            list-style-type: none;
+            cursor: pointer;
+        }
+
+        table tbody tr:nth-child(odd) {
+            background: #F4F4F4;
+        }
+
+        table tbody td:nth-child(even) {
+            color: #C00;
+        }
+    </style>
+</head>
+<script th:src="@{/jquery/jquery-2.1.1.min.js}"></script>
+<script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+<script th:src="@{/script/docs.min.js}"></script>
+<script th:src="@{/layer/layer.js}"></script>
+<script th:src="@{/ztree/jquery.ztree.all-3.5.min.js}"></script>
+<script type="text/javascript" th:src="@{/crowd/my-role.js}"></script>
+<script type="text/javascript">
+    window.pageNum = 1;
+    window.pageSize = 5;
+    window.keyword = "";
+    window.pages=9999999;
+    $(function () {
+        getPageInfoRemote();
+        $("#searchBtn").click(function (){
+            window.keyword=$("#keywordInput").val();
+            getPageInfoRemote();
+        })
+    });
+
+
+</script>
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <div><a class="navbar-brand" style="font-size:32px;" href="#">众筹平台 - 角色维护</a></div>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li style="padding-top:8px;">
+                    <div class="btn-group">
+                        <button th:text="${session.SPRING_SECURITY_CONTEXT.authentication.principal.originalAdmin.userName}" type="button"
+                                class="btn btn-default btn-success dropdown-toggle" data-toggle="dropdown">
+                            <i class="glyphicon glyphicon-user"></i> 张三 <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#"><i class="glyphicon glyphicon-cog"></i> 个人设置</a></li>
+                            <li><a href="#"><i class="glyphicon glyphicon-comment"></i> 消息</a></li>
+                            <li class="divider"></li>
+                            <li><a th:href="@{/admin/do/logout.html}"><i class="glyphicon glyphicon-off"></i> 退出系统</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li style="margin-left:10px;padding-top:8px;">
+                    <button type="button" class="btn btn-default btn-danger">
+                        <span class="glyphicon glyphicon-question-sign"></span> 帮助
+                    </button>
+                </li>
+            </ul>
+            <form class="navbar-form navbar-right">
+                <input type="text" class="form-control" placeholder="Search...">
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+            <div class="tree">
+                <ul style="padding-left:0px;" class="list-group">
+                    <li class="list-group-item tree-closed">
+                        <a href="main.html"><i class="glyphicon glyphicon-dashboard"></i> 控制面板</a>
+                    </li>
+                    <li class="list-group-item">
+                        <span><i class="glyphicon glyphicon glyphicon-tasks"></i> 权限管理 <span class="badge"
+                                                                                             style="float:right">3</span></span>
+                        <ul style="margin-top:10px;">
+                            <li style="height:30px;">
+                                <a th:href="@{/admin/do/main/user.html}"><i class="glyphicon glyphicon-user"></i>
+                                    用户维护</a>
+                            </li>
+                            <li style="height:30px;">
+                                <a th:href="@{/admin/to/role/page.html}"><i class="glyphicon glyphicon-king"></i> 角色维护</a>
+                            </li>
+                            <li style="height:30px;">
+                                <a th:href="@{/admin/to/menu/page.html}"><i class="glyphicon glyphicon-lock"></i> 菜单维护</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="list-group-item tree-closed">
+                        <span><i class="glyphicon glyphicon-ok"></i> 业务审核 <span class="badge"
+                                                                                style="float:right">3</span></span>
+                        <ul style="margin-top:10px;display:none;">
+                            <li style="height:30px;">
+                                <a href="auth_cert.html"><i class="glyphicon glyphicon-check"></i> 实名认证审核</a>
+                            </li>
+                            <li style="height:30px;">
+                                <a href="auth_adv.html"><i class="glyphicon glyphicon-check"></i> 广告审核</a>
+                            </li>
+                            <li style="height:30px;">
+                                <a href="auth_project.html"><i class="glyphicon glyphicon-check"></i> 项目审核</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="list-group-item tree-closed">
+                        <span><i class="glyphicon glyphicon-th-large"></i> 业务管理 <span class="badge" style="float:right">7</span></span>
+                        <ul style="margin-top:10px;display:none;">
+                            <li style="height:30px;">
+                                <a href="cert.html"><i class="glyphicon glyphicon-picture"></i> 资质维护</a>
+                            </li>
+                            <li style="height:30px;">
+                                <a href="type.html"><i class="glyphicon glyphicon-equalizer"></i> 分类管理</a>
+                            </li>
+                            <li style="height:30px;">
+                                <a href="process.html"><i class="glyphicon glyphicon-random"></i> 流程管理</a>
+                            </li>
+                            <li style="height:30px;">
+                                <a href="advertisement.html"><i class="glyphicon glyphicon-hdd"></i> 广告管理</a>
+                            </li>
+                            <li style="height:30px;">
+                                <a href="message.html"><i class="glyphicon glyphicon-comment"></i> 消息模板</a>
+                            </li>
+                            <li style="height:30px;">
+                                <a href="project_type.html"><i class="glyphicon glyphicon-list"></i> 项目分类</a>
+                            </li>
+                            <li style="height:30px;">
+                                <a href="tag.html"><i class="glyphicon glyphicon-tags"></i> 项目标签</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="list-group-item tree-closed">
+                        <a href="param.html"><i class="glyphicon glyphicon-list-alt"></i> 参数管理</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="glyphicon glyphicon-th"></i> 数据列表</h3>
+                </div>
+                <div class="panel-body">
+                    <form class="form-inline" role="form" style="float:left;">
+                        <div class="form-group has-feedback">
+                            <div class="input-group">
+                                <div class="input-group-addon">查询条件</div>
+                                <input id="keywordInput" class="form-control has-success" type="text" placeholder="请输入查询条件">
+                            </div>
+                        </div>
+                        <button id="searchBtn" type="button" class="btn btn-warning"><i class="glyphicon glyphicon-search"></i> 查询
+                        </button>
+                    </form>
+                    <button id="batchRemoveBtn" type="button" class="btn btn-danger" style="float:right;margin-left:10px;"><i
+                            class=" glyphicon glyphicon-remove"></i> 删除
+                    </button>
+                    <button type="button" class="btn btn-primary" style="float:right;"
+                            data-toggle="modal" data-target="#myModal_save"><i class="glyphicon glyphicon-plus"></i> 新增
+                    </button>
+                    <br>
+                    <hr style="clear:both;">
+                    <div class="table-responsive">
+                        <table class="table  table-bordered">
+                            <thead>
+                            <tr>
+                                <th width="30">#</th>
+                                <th width="30"><input id="summaryBox" type="checkbox"></th>
+                                <th>名称</th>
+                                <th width="100">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody id="rolePageBody">
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <td colspan="6" align="center">
+                                    <ul class="pagination" id="Pagination">
+                                    </ul>
+                                </td>
+                            </tr>
+
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="myModal_save" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">新增角色</h4>
+            </div>
+            <div class="modal-body">
+                <input type="text" name="loginAcct" class="form-control" id="inputRoleName" placeholder="请输入角色名称" autofocus>
+            </div>
+            <div class="modal-footer">
+                <button id="saveRoleName" type="button" class="btn btn-primary">保存</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<div class="modal fade" id="myModal_edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">编辑角色</h4>
+            </div>
+            <div class="modal-body">
+                <input type="text" name="roleName" class="form-control" id="inputEditRoleName" placeholder="请输入角色名称" autofocus>
+            </div>
+            <div class="modal-footer">
+                <button id="editRoleName" type="button" class="btn btn-primary">更新</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<div class="modal fade" id="myModal_remove" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">删除角色</h4>
+            </div>
+            <div class="modal-body">
+                <div style="text-align: center">
+                    <h4>是否确认删除以下角色：</h4>
+                    <span id="roleNameSpan"></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="removeRoleName" type="button" class="btn btn-primary">确认</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<div id="assignModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">尚筹网系统弹窗</h4>
+            </div>
+            <div class="modal-body">
+                <ul id="authTreeDemo" class="ztree"></ul>
+            </div>
+            <div class="modal-footer">
+                <button id="assignBtn" type="button" class="btn btn-primary">好的，我设置好了！执行分配！</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

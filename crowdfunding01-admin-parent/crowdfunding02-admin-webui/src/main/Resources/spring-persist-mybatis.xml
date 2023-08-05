@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+    <!--加载properties配置文件-->
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+    <!--配置数据源-->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="username" value="${jdbc.user}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="driverClassName" value="${jdbc.driver}"/>
+    </bean>
+
+    <!--配置sqlSessionFactoryBean-->
+    <bean id="sqlSessionFactoryBean" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--装配数据源-->
+        <property name="dataSource" ref="dataSource"/>
+        <!--指定mybatis全局配置文件位置-->
+        <property name="configLocation" value="classpath:mybatis/mybatis-config.xml"/>
+        <!--指定Mapper配置文件位置-->
+        <property name="mapperLocations" value="classpath:mybatis/mapper/*Mapper.xml"/>
+
+        <!--配置分页插件-->
+        <property name="plugins">
+            <array>
+                <bean class="com.github.pagehelper.PageHelper">
+                    <property name="properties">
+                        <props>
+                            <!--配置方言-->
+                            <prop key="dialect">mysql</prop>
+                            <!-- 让 PageHelper 自动把浏览器传来的 PageNum 修正到 0~总页数范围 -->
+                            <prop key="reasonable">true</prop>
+                        </props>
+                    </property>
+                </bean>
+            </array>
+        </property>
+    </bean>
+
+    <!--配置mapperScannerConfigurer-->
+    <bean id="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!-- 使用 basePackage 属性指定 Mapper 接口所在包 -->
+        <property name="basePackage" value="com.wf.crowd.mapper"/>
+    </bean>
+
+    <!-- 配置自动扫描的包：主要是为了把Service扫描到IOC容器中 -->
+    <context:component-scan base-package="com.wf.crowd.service"/>
+
+    <!-- 配置事务管理器 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <!-- 装配数据源 -->
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <!-- 配置事务切面 -->
+    <aop:config>
+        <!-- execution(public String com.atguigu.crowd.service.AdminService.saveAdmin(Admin)) -->
+        <!-- 考虑到后面我们整合SpringSecurity，避免把UserDetailsService加入到事务控制，让切入点表达式定位到ServiceImpl那个类，而不是Service接口 -->
+        <aop:pointcut expression="execution(* *..*ServiceImpl.*(..))" id="txPointcut"/>
+        <!-- 将切入点表达式和事务通知关联起来 -->
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="txPointcut"/>
+    </aop:config>
+    <!-- 配置事务通知 -->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <!-- 配置事务属性 -->
+        <tx:attributes>
+            <!-- 查询方法：配置只读属性，让数据库知道这是一个查询操作，能够进行一定优化 -->
+            <!-- 我们约定：在Service层中的方法名与dao层中的方法名规范：
+                            get/query/find		select
+                            save				insert
+                            remove				delete -->
+            <tx:method name="get*" read-only="true"/>
+            <tx:method name="find*" read-only="true"/>
+            <tx:method name="query*" read-only="true"/>
+            <tx:method name="count*" read-only="true"/>
+
+            <!-- 增删改方法：配置事务的传播行为、回滚异常 -->
+            <!-- propagation属性：
+                        REQUIRED：默认值，它表示当前方法必须工作在事务中，如果当前线程上没有已经开启的事务，则自己开启新事务
+                                                                       如果已经有了，就使用这个已有的事务
+                                                                       顾虑：可能自己没出错，但被别人开启的事务回滚了
+                                                                       （所以我们不用它）
+                        REQUIRES_NEW：建议使用的值，它表示不管当前线程上有没有事务，都要自己开事务，在自己的事务中运行
+                                        好处：不会受到其他事务回滚的影响 -->
+            <!-- rollback-for属性：配置事务方法针对什么样的异常回滚
+                                默认是遇到运行时异常回滚
+                                建议：编译时异常和运行时异常都回滚 -->
+            <tx:method name="save*" propagation="REQUIRES_NEW" rollback-for="java.lang.Exception"/>
+            <tx:method name="update*" propagation="REQUIRES_NEW" rollback-for="java.lang.Exception"/>
+            <tx:method name="remove*" propagation="REQUIRES_NEW" rollback-for="java.lang.Exception"/>
+            <tx:method name="batch*" propagation="REQUIRES_NEW" rollback-for="java.lang.Exception"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <!-- 配置 BCryptPasswordEncoder 的 bean -->
+    <bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+</beans>

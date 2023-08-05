@@ -1,0 +1,27 @@
+server:
+  port: 5000
+
+spring:
+  application:
+    name: crowd-project
+  thymeleaf:
+    prefix: classpath:/templates
+    suffix: .html
+  redis:
+    host: 192.168.71.100
+    password: 111111
+  session:
+    store-type: redis
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:1000/eureka
+aliyun:
+  oss:
+    access-key-id: LTAI5tMFS3JsHYJ2LggKFavs
+    access-key-secret: PGurIsbQILpi5KqMevRHy4jydTbmZK
+    bucket-domain: http://wf-crowd.oss-cn-chengdu.aliyuncs.com
+    bucket-name: wf-crowd
+    end-point: http://oss-cn-chengdu.aliyuncs.com
+

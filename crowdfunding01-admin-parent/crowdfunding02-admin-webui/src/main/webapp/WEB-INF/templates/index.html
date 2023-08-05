@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<button id="btn1" onclick="test()">点我</button>
+<button id="btn2">111</button>
+<script type="text/javascript" src="../../jquery/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" th:src="@{/layer/layer.js}"></script>
+<script type="text/javascript">
+
+    $(function (){
+        $("#btn1").click(function (){
+            var admin={
+                id:2222,
+                loginAcct:"xiaofan",
+                userPswd:"123456",
+                userName:"小凡",
+                email:"xiaofan@qq.com",
+                createTime:null
+            };
+            $.ajax({
+                url: "/save",
+                type: "post",
+                data: JSON.stringify(admin),
+                contentType:"application/json;charset=UTF-8",
+                dataType:"json",
+                success:function(response){
+                    console.log(response);
+                },
+                error:function (response){
+                    console.log(response)
+                }
+            });
+        });
+        $("#btn2").click(function (){
+            layer.msg("layer弹框");
+        })
+    });
+</script>
+</body>
+</html>
