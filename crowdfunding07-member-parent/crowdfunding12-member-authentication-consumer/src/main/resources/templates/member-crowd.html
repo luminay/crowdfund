@@ -99,11 +99,11 @@
                 </div>
             </div>
             <div class="list-group">
-                <div class="list-group-item active">
+                <div class="list-group-item " style="cursor:pointer;">
                     <a th:href="@{/member/to/center/page}">资产总览</a><span class="badge"><i
                         class="glyphicon glyphicon-chevron-right"></i></span>
                 </div>
-                <div class="list-group-item " style="cursor:pointer;">
+                <div class="list-group-item active">
                     <a th:href="@{/member/to/mycrowd}">我的众筹</a><span class="badge"><i
                         class="glyphicon glyphicon-chevron-right"></i></span>
                 </div>
@@ -117,14 +117,12 @@
             </ul>
             <div id="myTabContent" class="tab-content" style="margin-top:10px;">
                 <div role="tabpanel" class="tab-pane fade active in" id="home" aria-labelledby="home-tab">
-
                     <ul id="myTab1" class="nav nav-tabs">
                         <li role="presentation" class="active"><a href="#support">我支持的</a></li>
                         <li role="presentation"><a href="#attension">我关注的</a></li>
                         <li role="presentation"><a href="#add">我发起的</a></li>
                         <li class=" pull-right">
-                            <a th:href="@{/member/to/center/page}">资产总览</a>
-                            <!--<a th:href="@{/member/to/start}">发起众筹</a>-->
+                            <button type="button" class="btn btn-warning" onclick="window.location.href='http://localhost/project/agree/protocol/page'">发起众筹</button>
                         </li>
                     </ul>
                     <div id="myTab1" class="tab-content" style="margin-top:10px;">
