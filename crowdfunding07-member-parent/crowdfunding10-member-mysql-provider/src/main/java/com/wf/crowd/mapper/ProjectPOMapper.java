@@ -2,6 +2,8 @@ package com.wf.crowd.mapper;
 
 import com.wf.crowd.entity.po.ProjectPO;
 import com.wf.crowd.entity.po.ProjectPOExample;
+import com.wf.crowd.entity.vo.DetailProjectVO;
+import com.wf.crowd.entity.vo.PortalTypeVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -32,4 +34,8 @@ public interface ProjectPOMapper {
     void insertTypeRelationship(@Param("typeIdList") List<Integer> typeIdList,@Param("projectPOId") Integer projectPOId);
 
     void insertTagRelationship(@Param("tagIdList") List<Integer> tagIdList, @Param("projectPOId") Integer projectPOId);
+
+    List<PortalTypeVO> selectPortalTypeVOList();
+
+    DetailProjectVO selectDetailProjectVO(Integer projectId);
 }

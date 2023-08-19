@@ -13,6 +13,16 @@ public class MemberLaunchInfoPO {
 
     private String serviceNum;
 
+    private Integer projectId;
+
+    public Integer getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Integer projectId) {
+        this.projectId = projectId;
+    }
+
     public Integer getId() {
         return id;
     }

@@ -15,10 +15,10 @@ import java.util.List;
  * @Create 2023/7/18 19:24
  * @Version 1.0
  */
+
 /**
  * 考虑到 User 对象中仅仅包含账号和密码，为了能够获取到原始的 Admin 对象，专门创建
- 这个类对 User 类进行扩展
- *
+ * 这个类对 User 类进行扩展
  */
 public class SecurityAdmin extends User {
     // 原始的 Admin 对象，包含 Admin 对象的全部属性

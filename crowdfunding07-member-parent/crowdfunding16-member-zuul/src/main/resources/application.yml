@@ -8,14 +8,14 @@ spring:
   application:
     name: crowd-zuul
   redis:
-    host: 192.168.71.100
+    host: 192.168.71.104
     password: 111111
   session:
       store-type: redis
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:1000/eureka
+      defaultZone: http://192.168.71.104:1000/eureka
 zuul:
 #  host:
 #    connect-timeout-millis: 60000
@@ -29,6 +29,12 @@ zuul:
     crowd-project:
       service-id: crowd-project
       path: /project/**
+    crowd-order:
+      service-id: crowd-order
+      path: /order/**
+    crowd-pay:
+      service-id: crowd-pay
+      path: /pay/**
   add-host-header: true
 ribbon:
   ConnectTimeout: 20000 # 连接超时时间（ms）

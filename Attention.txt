@@ -1,6 +1,12 @@
-一.做远程服务调用的模块，也就是所谓的Feign，启动报错Bean未找到。
-    检查步骤
-    1. 检查springboot启动类是否标注@EnableFeignClients注解，未标注该注解会导致无法注入bean
-    2. 检查远程调用模块是否标注注解@FeignClient
-    3. 检查@FeignClient注解中是否写了正确的微服务名称（区分大小写
-    4. 检查@FeignClient注解中标识的微服务是否启动
+一.  做远程服务调用的模块，也就是所谓的Feign，启动报错Bean未找到。
+        检查步骤
+        1. 检查springboot启动类是否标注@EnableFeignClients注解，未标注该注解会导致无法注入bean
+        2. 检查远程调用模块是否标注注解@FeignClient
+        3. 检查@FeignClient注解中是否写了正确的微服务名称（区分大小写
+        4. 检查@FeignClient注解中标识的微服务是否启动
+
+二.  远程调用的接口方法的参数前要加注解以及handler方法。
+
+三.  MySQL的service放要注意事务的设置。
+
+四.  存入redis的数据要实现Serializable接口，序列化。

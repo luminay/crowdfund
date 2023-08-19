@@ -3,19 +3,13 @@ package com.wf.crowd.handler;
 import com.wf.crowd.api.MySQLRemoteService;
 import com.wf.crowd.config.OSSProperties;
 import com.wf.crowd.constant.CrowdConstant;
-import com.wf.crowd.entity.vo.MemberConfirmInfoVO;
-import com.wf.crowd.entity.vo.MemberLoginVO;
-import com.wf.crowd.entity.vo.ProjectVO;
-import com.wf.crowd.entity.vo.ReturnVO;
+import com.wf.crowd.entity.vo.*;
 import com.wf.crowd.util.CrowdUtil;
 import com.wf.crowd.util.ResultEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
@@ -42,6 +36,16 @@ public class ProjectHandler {
     @Autowired
     private OSSProperties ossProperties;
 
+    @RequestMapping("/get/project/detail/{projectId}")
+    public String getProjectDetail(@PathVariable("projectId") Integer projectId, Model model) {
+        ResultEntity<DetailProjectVO> resultEntity = mySQLRemoteService.getDetailProjectVORemote(projectId);
+        if (ResultEntity.SUCCESS.equals(resultEntity.getResult())) {
+            DetailProjectVO detailProjectVO = resultEntity.getData();
+            model.addAttribute("detailProjectVO", detailProjectVO);
+        }
+        return "project-show-detail";
+    }
+
     @RequestMapping("/create/confirm")
     public String saveConfirm(Model model, HttpSession session, MemberConfirmInfoVO memberConfirmInfoVO){
         ProjectVO projectVO = (ProjectVO) session.getAttribute(CrowdConstant.ATTR_NAME_TEMPLE_PROJECT);
@@ -61,7 +65,7 @@ public class ProjectHandler {
 
         session.removeAttribute(CrowdConstant.ATTR_NAME_TEMPLE_PROJECT);
 
-        return "redirect:http://localhost/project/create/success";
+        return "redirect:http://192.168.71.104/project/create/success";
     }
 
     @ResponseBody
@@ -97,6 +101,7 @@ public class ProjectHandler {
     @PostMapping("/create/project/information")
     public String saveProjectBasicInfo(ProjectVO projectVO, MultipartFile headerPicture, List<MultipartFile> detailPictureList, HttpSession session, Model model) throws IOException {
 
+        projectVO=new ProjectVO();
         //头图
         boolean headerPictureEmpty = headerPicture.isEmpty();
         if (headerPictureEmpty) {
@@ -136,6 +141,6 @@ public class ProjectHandler {
         }
         projectVO.setDetailPicturePathList(detailPicturePathList);
         session.setAttribute(CrowdConstant.ATTR_NAME_TEMPLE_PROJECT,projectVO);
-        return "redirect:http://localhost/project/return/info/page";
+        return "redirect:http://192.168.71.104/project/return/info/page";
     }
 }

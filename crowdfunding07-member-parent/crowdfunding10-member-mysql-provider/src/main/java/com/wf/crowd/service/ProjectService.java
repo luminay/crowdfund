@@ -1,6 +1,10 @@
 package com.wf.crowd.service;
 
+import com.wf.crowd.entity.vo.DetailProjectVO;
+import com.wf.crowd.entity.vo.PortalTypeVO;
 import com.wf.crowd.entity.vo.ProjectVO;
+
+import java.util.List;
 
 /**
  * ClassName: ProjectService
@@ -13,4 +17,6 @@ import com.wf.crowd.entity.vo.ProjectVO;
  */
 public interface ProjectService {
     void saveProject(ProjectVO projectVO, Integer memberId);
+    List<PortalTypeVO> getPortalTypeVO();
+    DetailProjectVO getDetailProjectVO(Integer projectId);
 }

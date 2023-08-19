@@ -9,10 +9,11 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-    </properties>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.3.4.RELEASE</version>
+    </parent>
 
     <!-- 配置在父工程中要管理的依赖 -->
     <dependencyManagement>
@@ -42,6 +43,9 @@
         <module>crowdfunding10-member-mysql-provider</module>
         <module>crowdfunding11-member-redis-provider</module>
         <module>crowdfunding12-member-authentication-consumer</module>
+        <module>crowdfunding13-member-project-consumer</module>
+        <module>crowdfunding14-member-order-consumer</module>
+        <module>crowdfunding15-member-pay-consumer</module>
         <module>crowdfunding16-member-zuul</module>
         <module>crowdfunding17-member-api</module>
     </modules>
