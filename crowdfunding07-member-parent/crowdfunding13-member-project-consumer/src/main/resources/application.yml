@@ -25,9 +25,9 @@ eureka:
       defaultZone: http://192.168.71.104:1000/eureka
 aliyun:
   oss:
-    access-key-id: LTAI5tMFS3JsHYJ2LggKFavs
-    access-key-secret: PGurIsbQILpi5KqMevRHy4jydTbmZK
-    bucket-domain: http://wf-crowd.oss-cn-chengdu.aliyuncs.com
-    bucket-name: wf-crowd
-    end-point: http://oss-cn-chengdu.aliyuncs.com
+    access-key-id: 
+    access-key-secret: 
+    bucket-domain: 
+    bucket-name:
+    end-point: 
 
