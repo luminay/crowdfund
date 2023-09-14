@@ -16,8 +16,8 @@ spring:
     cache: true  #cache: 是否缓存，开发模式下设置为false，避免改了模板还要重启服务器，线上设置为true，可以提高性能。
   mail:
     host: smtp.qq.com
-    username: 1332538873@qq.com
-    password: nnspnseucdlmgffh
+    username: @qq.com
+    password: 
     default-encoding: utf-8
 
 
